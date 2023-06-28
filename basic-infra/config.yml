@@ -1,0 +1,10 @@
+common:
+  vpn_cidr: "10.1.0.0/16"
+
+workspaces:
+  nonprod-ap-south-1:
+    aws:
+      account_id: 999999999999
+      region: ap-south-1
+    account_name: nonprod
+    project_name: tothenew
