@@ -19,7 +19,7 @@ locals {
   common    = local.env["common"]
   workspace = local.env["workspaces"][terraform.workspace]
 
-  project_name_prefix = "{local.workspace.account_name}-${local.workspace.aws.region}-${local.workspace.project_name}"
+  project_name_prefix = "${local.workspace.account_name}-${local.workspace.aws.region}-${local.workspace.project_name}"
 
   tags = {
     Project     = local.workspace.project_name

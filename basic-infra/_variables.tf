@@ -13,11 +13,3 @@ variable "prj_prefix" {
   type        = string
   default     = "demorun"
 }
-
-variable "secret_key" {
-  default = "rOhp7bQKgWZSehela6Ndgz5whilWTBJ+d65z4+U1"
-}
-
-variable "secret_key_id" {
-  default = "AKIA4YUBBE2HI6MB5Q5L"
-}
