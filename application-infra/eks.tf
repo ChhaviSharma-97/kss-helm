@@ -230,24 +230,24 @@ module "load_balancer_controller" {
   ]
 }
 
-# module "secrets-store-csi" {
-#   depends_on = [
-#     module.eks_cluster
-#   ]
-#   source = "git::https://github.com/tothenew/terraform-aws-eks.git//modules/secret-store-csi"
-#   cluster_name = module.eks_cluster.cluster_id
-#   oidc_provider_arn = module.eks_cluster.oidc_provider_arn
-#   chart_version = local.workspace.eks_cluster.secrets-store-csi.chart_version
-#   ascp_chart_version = local.workspace.eks_cluster.secrets-store-csi.ascp_chart_version
-#   syncSecretEnabled = local.workspace.eks_cluster.secrets-store-csi.syncSecretEnabled
-#   enableSecretRotation = local.workspace.eks_cluster.secrets-store-csi.enableSecretRotation
-#   namespace_service_accounts = ["${local.workspace.environment_name}:api-provider-service-service-role","${local.workspace.environment_name}:core-service-service-role"]
-# }
-# resource "aws_iam_role_policy_attachment" "secrets_integration_policy_attachment" {
-#   depends_on = [
-#     module.secrets-store-csi
-#   ]
-#   count = 1
-#   role       = module.secrets-store-csi.iam_role_name
-#   policy_arn = module.helm_iam_policy.arn
-# }
+module "secrets-store-csi" {
+   depends_on = [
+     module.eks_cluster
+   ]
+   source = "git::https://github.com/tothenew/terraform-aws-eks.git//modules/secret-store-csi"
+   cluster_name = module.eks_cluster.cluster_id
+   oidc_provider_arn = module.eks_cluster.oidc_provider_arn
+   chart_version = local.workspace.eks_cluster.secrets-store-csi.chart_version
+   ascp_chart_version = local.workspace.eks_cluster.secrets-store-csi.ascp_chart_version
+   syncSecretEnabled = local.workspace.eks_cluster.secrets-store-csi.syncSecretEnabled
+   enableSecretRotation = local.workspace.eks_cluster.secrets-store-csi.enableSecretRotation
+   namespace_service_accounts = ["${local.workspace.environment_name}:user-service-app-service-role","${local.workspace.environment_name}:nginx-app-service-role"]
+ }
+ resource "aws_iam_role_policy_attachment" "secrets_integration_policy_attachment" {
+   depends_on = [
+     module.secrets-store-csi
+   ]
+   count = 1
+   role       = module.secrets-store-csi.iam_role_name
+   policy_arn = module.helm_iam_policy.arn
+}

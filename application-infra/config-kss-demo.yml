@@ -1,8 +1,8 @@
 workspaces:
   kss-demo:
     aws:
-      role: InfraDeployAccess
-      account_id: 9999999
+      role: nonprod-ap-south-1-tothenew-infra-deploy-access-role
+      account_id: 9999999999
       region: ap-south-1
     account_name: nonprod
     key_name: "vr-infra"
@@ -10,17 +10,17 @@ workspaces:
     environment_name: demo
     #hosted_zone: "videoready.tv"
     eks_cluster:
-      name: "vr-cluster"
-      version: "1.25"
-      min_size: 1
-      desired_size: 1
-      max_size: 2  
+      name: "helm-kss-cluster"
+      version: "1.24"
+      min_size: 2
+      desired_size: 2
+      max_size: 3  
       instance_type: "t3a.medium"
       is_mixed_instance_policy: false
       http_token_option: "optional"
       addons:
-        aws-ebs-csi-driver:
-          resolve_conflicts: "OVERWRITE"
+        #aws-ebs-csi-driver:
+        #  resolve_conflicts: "OVERWRITE"
         vpc-cni:
           resolve_conflicts: "OVERWRITE"
       override:
@@ -99,10 +99,10 @@ workspaces:
       engine: "aurora-mysql"
       instance_class: "db.serverless"
       parameter_group_name: "default.aurora-mysql5.7"
-      db_name: "vr_db"
+      db_name: "helm_db"
       engine_version: "8.0.mysql_aurora.3.02.0"
-      serverlessv2_scaling_configuration_max: 10
-      serverlessv2_scaling_configuration_min: 4
+      serverlessv2_scaling_configuration_max: 1.5
+      serverlessv2_scaling_configuration_min: 1
       allocated_storage: 100
       storage_encrypted: true
       db_subnet_group_id: "subnet_group"
@@ -113,15 +113,11 @@ workspaces:
       deletion_window_in_days: 7
 
     s3:
-      name: "vr-datastore"
+      name: "helm-datastore"
     
     kms_policy:
-      role_name: "role-attached-to-tf-instance"
+      role_name: "nonprod-ap-south-1-tothenew-terraform-tf-agent-role"
 
     mysql_addons:
-      app_user_names: ["api-provider", "core", "core-auth", "core-editorial", "core-content", "subscriber-management"]
-      search_db_name: "vr_search"
-      search_user_names: ["application-search", "application-ingestor", "videoready-config"]
-     
-    ecr:
-      repo_names: ["utility","api-provider-service","application-ingestor","application-search-service","videoready-config","frontend-cms","frontend-web","content-processor","content-service","editorial-service","gateway-service","core-service","subscriber-management","producer-service"]
+      #app_user_names: ["api-provider", "core", "core-auth", "core-editorial", "core-content", "subscriber-management"]
+      app_db_name: "newdb"
