@@ -2,7 +2,7 @@ workspaces:
   kss-demo:
     aws:
       role: nonprod-ap-south-1-tothenew-infra-deploy-access-role
-      account_id: 999999
+      account_id: 9999999999
       region: ap-south-1
     account_name: nonprod
     key_name: "vr-infra"
@@ -121,7 +121,3 @@ workspaces:
     mysql_addons:
       #app_user_names: ["api-provider", "core", "core-auth", "core-editorial", "core-content", "subscriber-management"]
       app_db_name: "newdb"
-      app_user_names: ["newappuser"]
-     
-    ecr:
-      repo_names: ["utility","api-provider-service","application-ingestor","application-search-service","videoready-config","frontend-cms","frontend-web","content-processor","content-service","editorial-service","gateway-service","core-service","subscriber-management","producer-service"]

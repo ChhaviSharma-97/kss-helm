@@ -83,7 +83,7 @@ resource "aws_ssm_parameter" "app_db_name" {
   type        = "String"
   value       = mysql_database.app.name
 }
-
+/*
 # Create and grant access to APP DB Users
 
 resource "random_string" "app_db_password" {
@@ -120,3 +120,4 @@ resource "aws_ssm_parameter" "app_db_password" {
   value       = random_string.app_db_password[count.index].result
 
  }
+*/
