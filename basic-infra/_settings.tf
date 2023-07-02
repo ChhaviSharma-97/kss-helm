@@ -5,6 +5,16 @@ provider "aws" {
 }
 
 terraform {
+  backend "s3" {
+    bucket  = "kss-basic-infra-backend"
+    encrypt = true
+    key     = "basic-infra/main.tfstate"
+    region  = "ap-south-1"
+    profile = "default"
+  }
+}
+
+terraform {
   required_version = ">= 1.3.3"
   required_providers {
     aws = {
