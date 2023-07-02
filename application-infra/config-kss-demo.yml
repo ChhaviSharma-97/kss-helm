@@ -1,7 +1,7 @@
 workspaces:
   kss-demo:
     aws:
-      role: InfraDeployAccess
+      role: nonprod-ap-south-1-tothenew-infra-deploy-access-role
       account_id: 9999999
       region: ap-south-1
     account_name: nonprod
@@ -10,17 +10,17 @@ workspaces:
     environment_name: demo
     #hosted_zone: "videoready.tv"
     eks_cluster:
-      name: "vr-cluster"
-      version: "1.25"
-      min_size: 1
-      desired_size: 1
-      max_size: 2  
+      name: "helm-kss-cluster"
+      version: "1.24"
+      min_size: 2
+      desired_size: 2
+      max_size: 3  
       instance_type: "t3a.medium"
       is_mixed_instance_policy: false
       http_token_option: "optional"
       addons:
-        aws-ebs-csi-driver:
-          resolve_conflicts: "OVERWRITE"
+        #aws-ebs-csi-driver:
+        #  resolve_conflicts: "OVERWRITE"
         vpc-cni:
           resolve_conflicts: "OVERWRITE"
       override:
@@ -113,7 +113,7 @@ workspaces:
       deletion_window_in_days: 7
 
     s3:
-      name: "vr-datastore"
+      name: "helm-datastore"
     
     kms_policy:
       role_name: "role-attached-to-tf-instance"
