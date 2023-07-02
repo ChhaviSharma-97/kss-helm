@@ -32,7 +32,7 @@ provider "mysql" {
   username = "${data.aws_ssm_parameter.rds_username.value}"
   password = "${data.aws_ssm_parameter.rds_password.value}"
 }
-
+/*
 # Create RDS App users
 
 resource "random_string" "app_password" {
@@ -69,54 +69,54 @@ resource "aws_ssm_parameter" "app_password" {
   value       = random_string.app_password[count.index].result
 
 }
-
-# Create Search Database
+*/
+# Create User-App Database
 resource "mysql_database" "app" {
     depends_on = [
       module.create_database
     ]
-  name = local.workspace.mysql_addons.search_db_name
+  name = local.workspace.mysql_addons.app_db_name
 }
-resource "aws_ssm_parameter" "search_db_name" {
-  name        = "/${local.workspace.environment_name}/SEARCH_DB/NAME"
-  description = "search database name"
+resource "aws_ssm_parameter" "app_db_name" {
+  name        = "/${local.workspace.environment_name}/APP_DB/NAME"
+  description = "app database name"
   type        = "String"
   value       = mysql_database.app.name
 }
 
-# Create and grant access to Search DB Users
+# Create and grant access to APP DB Users
 
-resource "random_string" "app_search_password" {
-  count = length(local.workspace.mysql_addons.search_user_names)
+resource "random_string" "app_db_password" {
+  count = length(local.workspace.mysql_addons.app_user_names)
   length  = 34
   special = false
 }
-resource "mysql_user" "app_search_user" {
-  count = length(local.workspace.mysql_addons.search_user_names)
-  user               = local.workspace.mysql_addons.search_user_names[count.index]
+resource "mysql_user" "app_db_user" {
+  count = length(local.workspace.mysql_addons.app_user_names)
+  user               = local.workspace.mysql_addons.app_user_names[count.index]
   host               = "%"
-  plaintext_password = random_string.app_search_password[count.index].result
+  plaintext_password = random_string.app_db_password[count.index].result
 }
-resource "mysql_grant" "app_search_user" {
-  count = length(local.workspace.mysql_addons.search_user_names)
-  user       = mysql_user.app_search_user[count.index].user
-  host       = mysql_user.app_search_user[count.index].host
+resource "mysql_grant" "app_db_user" {
+  count = length(local.workspace.mysql_addons.app_user_names)
+  user       = mysql_user.app_db_user[count.index].user
+  host       = mysql_user.app_db_user[count.index].host
   database   = mysql_database.app.name
   privileges = ["SELECT", "UPDATE", "INSERT", "DELETE", "CREATE", "ALTER", "REFERENCES"]
 }
-resource "aws_ssm_parameter" "app_search_username" {
-  count = length(local.workspace.mysql_addons.search_user_names)
-  name        = "/${local.workspace.environment_name}/SEARCH_DB/${local.workspace.mysql_addons.search_user_names[count.index]}/USERNAME"
-  description = "${local.workspace.mysql_addons.search_user_names[count.index]} Username"
+resource "aws_ssm_parameter" "app_db_username" {
+  count = length(local.workspace.mysql_addons.app_user_names)
+  name        = "/${local.workspace.environment_name}/APP_DB/${local.workspace.mysql_addons.app_user_names[count.index]}/USERNAME"
+  description = "${local.workspace.mysql_addons.app_user_names[count.index]} Username"
   type        = "String"
-  value       = mysql_user.app_search_user[count.index].user
+  value       = mysql_user.app_db_user[count.index].user
 
 }
-resource "aws_ssm_parameter" "app_search_password" {
-  count = length(local.workspace.mysql_addons.search_user_names)
-  name        = "/${local.workspace.environment_name}/SEARCH_DB/${local.workspace.mysql_addons.search_user_names[count.index]}/PASSWORD"
-  description = "${local.workspace.mysql_addons.search_user_names[count.index]} Search Password"
+resource "aws_ssm_parameter" "app_db_password" {
+  count = length(local.workspace.mysql_addons.app_user_names)
+  name        = "/${local.workspace.environment_name}/APP_DB/${local.workspace.mysql_addons.app_user_names[count.index]}/PASSWORD"
+  description = "${local.workspace.mysql_addons.app_user_names[count.index]} Search Password"
   type        = "SecureString"
-  value       = random_string.app_search_password[count.index].result
+  value       = random_string.app_db_password[count.index].result
 
  }
